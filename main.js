@@ -24,7 +24,7 @@ class Table {
 
     for (let row = 0; row < this.#size; row++) {
       for (let col = 0; col < this.#size; col++) {
-        const cell = this.#createCell(row, col);
+        const cell = this._createCell(row, col);
         table.appendChild(cell);
       }
     }
@@ -80,7 +80,7 @@ class Table {
     return this.#cellNodes;
   }
 
-  #createCell(row, col) {
+  _createCell(row, col) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
     cell.style.top = `${row * 100}px`;
@@ -111,7 +111,7 @@ class Game {
     this.#cells = [...Array(this.#size)].map((_) => Array(this.#size).fill(""));
 
     const tableNode = this.#table.getNode();
-    tableNode.addEventListener("click", this.#onTableClick);
+    tableNode.addEventListener("click", this._onTableClick);
   }
 
   restart = () => {
@@ -120,7 +120,7 @@ class Game {
     this.start();
   };
 
-  #onTableClick = (event) => {
+  _onTableClick = (event) => {
     const node = event.target;
     if (node.classList[0] === "cell") {
       const row = Number(node.getAttribute("row"));
@@ -128,30 +128,30 @@ class Game {
       if (this.#cells[row][col] === "") {
         node.innerText = this.#character;
         this.#cells[row][col] = this.#character;
-        const winnerLine = this.#isThereWinner(row, col);
+        const winnerLine = this._isThereWinner(row, col);
 
         if (winnerLine === "none") {
-          this.#changePlayer();
+          this._changePlayer();
         } else {
-          this.#stop();
-          this.#showWinnerLine(row, col, winnerLine);
+          this._stop();
+          this._showWinnerLine(row, col, winnerLine);
           this.#table.showWinnerMessage();
         }
       }
     }
   };
 
-  #stop() {
+  _stop() {
     const tableNode = this.#table.getNode();
-    tableNode.removeEventListener("click", this.#onTableClick);
+    tableNode.removeEventListener("click", this._onTableClick);
   }
 
-  #changePlayer() {
+  _changePlayer() {
     this.#character = this.#character === "X" ? "0" : "X";
     this.#table.changePlayer();
   }
 
-  #isThereWinner(row, col) {
+  _isThereWinner(row, col) {
     let sameCharacter = 0;
     for (let i = 0; i < this.#size; i++) {
       if (this.#cells[row][i] === this.#character) {
@@ -202,7 +202,7 @@ class Game {
     return "none";
   }
 
-  #showWinnerLine(row, col, line) {
+  _showWinnerLine(row, col, line) {
     const cellNodes = this.#table.getCellNodes();
 
     for (let i = 0; i < this.#size; i++) {
