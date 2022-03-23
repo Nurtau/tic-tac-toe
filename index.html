@@ -40,6 +40,10 @@
       transition: all 0.3s;
     }
 
+    input {
+      margin-top: 30px;
+    }
+
     #restart {
       border: none;
       padding: 0;
@@ -47,7 +51,7 @@
       cursor: pointer;
       font-size: 20px;
       border-bottom: solid 1px black;
-      margin-top: 30px;
+      margin-top: 10px;
     }
 
     #restart:hover {
@@ -58,6 +62,7 @@
   <body>
     <div class="full-box container">
       <div id="root" class="container"></div>
+      <input type="range" min="2" max="5" value="3"/>
       <button id="restart">Restart</button>
     </div>
   </body>

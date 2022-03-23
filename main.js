@@ -51,6 +51,12 @@ class Table {
     }
   }
 
+  changeSize(size) {
+    this.#size = size;
+    this.destroy();
+    this.create();
+  }
+
   changePlayer() {
     if (!this.#labelNode) return;
     this.#currentPlayer = this.#currentPlayer === 1 ? 2 : 1;
@@ -65,6 +71,12 @@ class Table {
     if (!this.#labelNode) return;
     const winner = this.#currentPlayer === 1 ? "first" : "second";
     this.#labelNode.innerText = `Winner is ${winner} player`;
+    this.#labelNode.style.color = "blue";
+  }
+
+  showDrawMessage() {
+    if (!this.#labelNode) return;
+    this.#labelNode.innerText = `It is draw`;
     this.#labelNode.style.color = "blue";
   }
 
@@ -97,6 +109,7 @@ class Game {
   #character;
   #cells;
   #size;
+  #moveNumber;
 
   constructor(table) {
     this.#table = table;
@@ -105,6 +118,7 @@ class Game {
   }
 
   start() {
+    this.#moveNumber = 0;
     this.#table.create();
 
     // initializing 2d array of empty strings
@@ -120,18 +134,29 @@ class Game {
     this.start();
   };
 
+  changeSize(size) {
+    this.#table.changeSize(size);
+    this.#size = this.#table.getSize();
+    this.start();
+  }
+
   _onTableClick = (event) => {
     const node = event.target;
     if (node.classList[0] === "cell") {
       const row = Number(node.getAttribute("row"));
       const col = Number(node.getAttribute("column"));
       if (this.#cells[row][col] === "") {
+        this.#moveNumber++;
         node.innerText = this.#character;
         this.#cells[row][col] = this.#character;
         const winnerLine = this._isThereWinner(row, col);
 
         if (winnerLine === "none") {
-          this._changePlayer();
+          if (this.#moveNumber === this.#size ** 2) {
+            this.#table.showDrawMessage();
+          } else {
+            this._changePlayer();
+          }
         } else {
           this._stop();
           this._showWinnerLine(row, col, winnerLine);
@@ -254,6 +279,11 @@ function main() {
 
   const restartButton = document.querySelector("#restart");
   restartButton.addEventListener("click", game.restart);
+
+  const sizeInput = document.querySelector("input");
+  sizeInput.addEventListener("input", (event) => {
+    game.changeSize(Number(event.target.value));
+  });
 
   game.start();
 }
