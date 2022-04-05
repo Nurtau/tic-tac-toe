@@ -113,12 +113,12 @@ class Game {
 
   constructor(table) {
     this.#table = table;
-    this.#character = "X";
     this.#size = table.getSize();
   }
 
   start() {
     this.#moveNumber = 0;
+    this.#character = "X";
     this.#table.create();
 
     // initializing 2d array of empty strings
@@ -172,7 +172,7 @@ class Game {
   }
 
   _changePlayer() {
-    this.#character = this.#character === "X" ? "0" : "X";
+    this.#character = this.#character === "X" ? "O" : "X";
     this.#table.changePlayer();
   }
 
